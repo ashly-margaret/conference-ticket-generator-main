@@ -1,0 +1,32 @@
+.dragAndDropUpload {
+  color: white;
+  .upload-container {
+    border: 2px dashed white;
+    border-radius: "8px";
+    padding: "20px";
+    text-align: "center" as "center";
+    width: "300px";
+    cursor: "pointer";
+    background: #48446c6b;
+    padding: 10px;
+    border-radius: 6px;
+    .drop-area{
+        display: flex;
+        justify-content: center;
+        .fileInput {
+            display: none, // Hides the file input
+          }
+          .dragAndDropIcon{
+            color: #f57261
+          }
+          .dragAndDropIconContainer{
+            width: 30px;
+            background: #48446c6b;
+            border: 1px solid white;
+            border-radius: 6px;
+            padding: 3px;
+          }
+    }
+    
+  }
+}
