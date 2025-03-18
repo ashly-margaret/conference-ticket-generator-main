@@ -68,15 +68,15 @@ function DragAndDropUpload() {
   const handleChangeFile = (id: string) => {
     const fileInput = document.getElementById("fileInput") as HTMLInputElement;
     if (fileInput) {
-      // Clear the current input value to allow selecting the same file again
-      fileInput.value = "";
-      fileInput.click(); // Trigger the file input click
+      // Clear the file input value to allow selecting the same file again
+      fileInput.value = ""; // Reset the file input
+      fileInput.click(); // Open the file input dialog
       fileInput.onchange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
           const file = e.target.files[0]; // Get the first selected file
           const reader = new FileReader();
           reader.onloadend = () => {
-            // Find the file to update in the state
+            // Update the state with the new file
             setFiles((prevFiles) =>
               prevFiles.map((f) =>
                 f.id === id
@@ -107,24 +107,27 @@ function DragAndDropUpload() {
             onChange={handleFileInputChange}
             className="fileInput"
           />
-          <div className="dragAndDropIconContainer" onClick={handleIconClick}>
-            <IoCloudUploadSharp className="dragAndDropIcon" />
-          </div>
+          
+          {/* Conditionally render the upload icon only when no files are uploaded */}
+          {files.length === 0 && (
+            <div className="dragAndDropIconContainer" onClick={handleIconClick}>
+              <IoCloudUploadSharp className="dragAndDropIcon" />
+            </div>
+          )}
         </div>
+
         <p>Drag and drop files here or click to select</p>
 
         {files.length > 0 && (
           <div className="file-list">
-           
-              {files.map((file, index) => (
-                <div key={index}>
-                  {/* <strong>{file.name}</strong> (Size: {file.size} bytes) */}
-                  {file.type.startsWith("image") && (
-                    <div className="image-preview">
-                      <img src={file.preview} alt={`preview-${file.name}`} />
-                    </div>
-                  )}
-                  <div className="file-list-btn-group">
+            {files.map((file, index) => (
+              <div key={index}>
+                {file.type.startsWith("image") && (
+                  <div className="image-preview">
+                    <img src={file.preview} alt={`preview-${file.name}`} />
+                  </div>
+                )}
+                <div className="file-list-btn-group">
                   <button
                     className="remove-btn"
                     onClick={() => handleRemoveFile(file.id)}
@@ -137,11 +140,9 @@ function DragAndDropUpload() {
                   >
                     Change
                   </button>
-                  </div>
-                
                 </div>
-              ))}
-            
+              </div>
+            ))}
           </div>
         )}
       </div>

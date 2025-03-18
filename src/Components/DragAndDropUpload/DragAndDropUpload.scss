@@ -36,14 +36,28 @@
         display: flex;
         justify-content: center;
         align-items: center;
-      div{
+        .image-preview{
+          display: flex;
+          justify-content: center;
+          margin-bottom: 10px;
+        }
+     
       
         .file-list-btn-group{
           display: flex;
           justify-content: center;
           align-items: center;
+          gap: 3px;
+          button{
+            background: #4C4965;
+            border: none;
+            border-radius: 5px;
+            color: #ffff;
+            padding: 6px;
+            cursor: pointer;
+          }
         }
-      }
+      
       .image-preview img {
         max-width: 60px;  // Limit image width
         max-height: 60px; // Limit image height
