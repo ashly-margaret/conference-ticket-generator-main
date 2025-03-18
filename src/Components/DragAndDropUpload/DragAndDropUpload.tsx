@@ -6,6 +6,8 @@ interface FileItem {
   name: string;
   size: number;
   type: string;
+  preview: string; // Preview URL for the image
+  id: string; // Unique identifier for each file
 }
 
 function DragAndDropUpload() {
@@ -18,30 +20,77 @@ function DragAndDropUpload() {
     processFiles(droppedFiles);
   };
 
-  // Handle file selection via file input (optional for fallback)
+  // Handle file selection via file input
   const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       processFiles(e.target.files);
     }
   };
 
-  // Process files and store them in state
+  // Process files and store them in state, including the image preview
   const processFiles = (fileList: FileList) => {
     const newFiles: FileItem[] = [];
     Array.from(fileList).forEach((file) => {
-      newFiles.push({
-        name: file.name,
-        size: file.size,
-        type: file.type,
-      });
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        newFiles.push({
+          name: file.name,
+          size: file.size,
+          type: file.type,
+          preview: reader.result as string, // Store the preview URL
+          id: file.name + Date.now().toString(), // Generate a unique ID for each file
+        });
+        setFiles((prevFiles) => [...prevFiles, ...newFiles]); // Update the state with the new files and preview
+      };
+      reader.readAsDataURL(file); // Read the file as a data URL (base64)
     });
-    setFiles((prevFiles) => [...prevFiles, ...newFiles]);
   };
 
   // Handle drag over event to allow dropping
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
   };
+
+  const handleIconClick = () => {
+    // Trigger the file input click
+    const fileInput = document.getElementById("fileInput") as HTMLInputElement;
+    if (fileInput) {
+      fileInput.click();
+    }
+  };
+
+  // Remove the selected file from the state
+  const handleRemoveFile = (id: string) => {
+    setFiles(files.filter((file) => file.id !== id)); // Remove the file from the state
+  };
+
+  // Handle the image change (select a new image to replace the current one)
+  const handleChangeFile = (id: string) => {
+    const fileInput = document.getElementById("fileInput") as HTMLInputElement;
+    if (fileInput) {
+      // Clear the current input value to allow selecting the same file again
+      fileInput.value = "";
+      fileInput.click(); // Trigger the file input click
+      fileInput.onchange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files) {
+          const file = e.target.files[0]; // Get the first selected file
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            // Find the file to update in the state
+            setFiles((prevFiles) =>
+              prevFiles.map((f) =>
+                f.id === id
+                  ? { ...f, preview: reader.result as string, name: file.name, size: file.size }
+                  : f
+              )
+            );
+          };
+          reader.readAsDataURL(file); // Read the new file as a data URL
+        }
+      };
+    }
+  };
+
   return (
     <div className="dragAndDropUpload">
       <div className="upload-container">
@@ -58,24 +107,41 @@ function DragAndDropUpload() {
             onChange={handleFileInputChange}
             className="fileInput"
           />
-          <div className="dragAndDropIconContainer">
+          <div className="dragAndDropIconContainer" onClick={handleIconClick}>
             <IoCloudUploadSharp className="dragAndDropIcon" />
           </div>
-
-        
         </div>
         <p>Drag and drop files here or click to select</p>
 
         {files.length > 0 && (
           <div className="file-list">
-            <h3>Uploaded Files:</h3>
-            <ul>
+           
               {files.map((file, index) => (
-                <li key={index}>
-                  <strong>{file.name}</strong> (Size: {file.size} bytes)
-                </li>
+                <div key={index}>
+                  {/* <strong>{file.name}</strong> (Size: {file.size} bytes) */}
+                  {file.type.startsWith("image") && (
+                    <div className="image-preview">
+                      <img src={file.preview} alt={`preview-${file.name}`} />
+                    </div>
+                  )}
+                  <div className="file-list-btn-group">
+                  <button
+                    className="remove-btn"
+                    onClick={() => handleRemoveFile(file.id)}
+                  >
+                    Remove
+                  </button>
+                  <button
+                    className="change-btn"
+                    onClick={() => handleChangeFile(file.id)}
+                  >
+                    Change
+                  </button>
+                  </div>
+                
+                </div>
               ))}
-            </ul>
+            
           </div>
         )}
       </div>

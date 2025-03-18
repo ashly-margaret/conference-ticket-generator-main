@@ -20,31 +20,68 @@
         font-weight: 600;
       }
     }
-    .mainTitle{
-        color: white;
-        padding-top: 20px;
-        padding-bottom: 10px;
-        h1{
-            margin: 0;
-        }
-      
+    .mainTitle {
+      color: white;
+      padding-top: 20px;
+      padding-bottom: 10px;
+      h1 {
+        margin: 0;
+      }
     }
   }
-  .text{
+  .text {
     color: white;
     padding-top: 10px;
   }
-  .formContainer{
+  .formContainer {
     padding-top: 30px;
-    .form{
-     .warningText{
-      color: white;
-      padding-top: 10px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-     }
+    
+   
+    .form {
+      .warningText {
+        color: white;
+        padding-top: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .form_inputbox {
+        margin-bottom: 20px; /* Adds space below the input box */
+        width: 100%; /* Makes the input box take up the full width of its parent */
+        text-align: left;
+        .form_label {
+          color: #ffff;
+          padding-bottom: 10px;
+        }
+        .input {
+          width: 100%; /* Make the input box take up the full width of its container */
+          font-size: 14px; /* Set font size */
+          border: 1px solid #ccc; /* Set border color */
+          border-radius: 5px; /* Round the corners of the input box */
+          outline: none; /* Remove the default outline when the input is focused */
+          transition: border-color 0.3s ease; /* Add transition for smooth border color change */
+          background: rgba(72, 68, 108, 0.4196078431);
+          padding: 10px 10px; /* Consistent padding */
+          color: white;
+          cursor: pointer;
+
+
+        }
+        .input:focus{
+          background: #37354D;
+        }
+       
+        
+      }
+   
+      .submit_btn{
+        background: #F67464;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 13px;
+        width: 100%;
+      }
+    
     }
   }
- 
 }
